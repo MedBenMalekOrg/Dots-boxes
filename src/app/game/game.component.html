@@ -1,0 +1,33 @@
+<ng-container *ngIf="(game$ | async) as game">
+  <ng-container *ngIf="isReady && game.playerNumber === keys(game.players).length">
+    <div class="score-board" >
+      <div class="player" *ngFor="let player of keys(game.players)">
+        <h1>{{player}} <span class="turn" [ngStyle]="{ 'backgroundColor': game.players[player].color }" *ngIf="game.players[player].turn"></span></h1>
+        <p>{{game.players[player].score}}</p>
+      </div>
+    </div>
+    <div class="container">
+      <div *ngFor="let x of game.getRows(); let indexRow = index">
+        <app-box *ngFor="let y of game.getColumns(); let indexColumn = index"
+                 [id]="x + (y*game.x)"
+                 [lastBottom]="indexColumn === (game.y - 1)"
+                 [lastRight]="indexRow === (game.x - 1)"
+                 [game]="game"></app-box>
+      </div>
+    </div>
+  </ng-container>
+  <div class="form-container" *ngIf="isReady && game && (game.playerNumber > keys(game.players).length)">
+    <h1>Waiting for players to join</h1>
+    <h1 *ngIf="keys(game.players) as players">{{players.length}} {{players.length > 1 ? 'players' : 'player'}} of {{game.playerNumber}} are ready</h1>
+  </div>
+  <div class="form-container" *ngIf="!isReady && game !== null">
+    <h1>Join the game</h1>
+    <form [formGroup]="gameJoinForm" (ngSubmit)="onJoin(game)">
+      <div class="form-input">
+        <label for="name">Player name</label>
+        <input type="text" formControlName="name" id="name" placeholder="Player name">
+      </div>
+      <button type="submit" [disabled]="blockButton || gameJoinForm.invalid">Join</button>
+    </form>
+  </div>
+</ng-container>

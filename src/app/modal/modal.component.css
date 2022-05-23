@@ -1,0 +1,58 @@
+.backdrop {
+  background-color: black;
+  opacity: 0.5;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  display: block;
+  z-index: 9;
+}
+
+.modal-container {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  z-index: 11;
+  width: 50vh;
+  min-height: 100px;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 20px;
+  animation: modalOpen;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes modalOpen {
+  0% {
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.modal-container {
+  text-align: center;
+}
+
+.modal-container .title {
+  margin: 0;
+  font-size: 24px;
+}
+
+.modal-container button {
+  border-radius: 20px;
+  background-color: deeppink;
+  color: white;
+  font-family: 'Lobster', cursive;
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+}
+
+.modal-container button:hover {
+  background-color: #ff64ab;
+}

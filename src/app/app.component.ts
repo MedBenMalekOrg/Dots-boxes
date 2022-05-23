@@ -1,10 +1,23 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {GameService, Modal} from './game.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css',]
 })
 export class AppComponent {
-  title = 'ng-intro';
+  modal: Modal = null;
+  isModalOpen = false;
+
+  constructor(gameService: GameService) {
+    gameService.getModal().subscribe(modal => {
+      this.modal = modal;
+      if (modal !== null) this.isModalOpen = true;
+    })
+  }
+
+  closed() {
+    this.isModalOpen = false;
+  }
 }

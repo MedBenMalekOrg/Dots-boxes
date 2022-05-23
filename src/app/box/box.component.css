@@ -1,0 +1,88 @@
+.box {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-color: #e1e1e1;
+}
+
+.box.active {
+  background-color: #788ba4;
+}
+
+.box .dot {
+  position: absolute;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: #3c4c62;
+  z-index: 2;
+}
+
+.box .dot.tr {
+  top: -3px;
+  right: -3px;
+}
+
+.box .dot.tl {
+  top: -3px;
+  left: -3px;
+}
+
+.box .dot.bl {
+  bottom: -3px;
+  left: -3px;
+}
+
+.box .dot.br {
+  bottom: -3px;
+  right: -3px;
+}
+
+.box .line {
+  position: absolute;
+  display: inline-block;
+  height: 5px;
+  width: 50px;
+  background-color: #cdd7e5;
+  transform-origin: 0 50%;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.box .line.left {
+  height: 50px;
+  width: 5px;
+}
+
+.box .line.right {
+  height: 50px;
+  width: 5px;
+  right: 0;
+}
+
+.box .line.bottom {
+  height: 5px;
+  width: 50px;
+  bottom: 0;
+}
+
+.box .line.active {
+  background-color: #3c4c62;
+}
+
+.box .line.last {
+  background-color: #d7c572;
+}
+
+.box .line.active:hover {
+  background-color: #3c4c62;
+  cursor: auto;
+}
+
+.box .line.last:hover {
+  background-color: #d7c572;
+}
+
+.box .line:hover {
+  background-color: #c6d9b2;
+}

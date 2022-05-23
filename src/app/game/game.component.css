@@ -1,0 +1,37 @@
+.container {
+  margin: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-board {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-board .player {
+  margin: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.score-board .player h1 {
+  font-size: 18px;
+  margin: 1rem 0 0.3rem 0;
+}
+
+.score-board .player p {
+  margin: 0;
+}
+
+.score-board .player h1 span.turn {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: deeppink;
+}

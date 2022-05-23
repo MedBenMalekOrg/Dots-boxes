@@ -1,0 +1,22 @@
+<div class="form-container">
+  <h1>Dots & boxes</h1>
+  <form [formGroup]="gameForm" (ngSubmit)="onCreate()">
+    <div class="form-input">
+      <label for="name">Player name</label>
+      <input type="text" formControlName="name" id="name" placeholder="Player name">
+    </div>
+    <div class="form-input">
+      <label for="number">Number of players</label>
+      <input type="number" formControlName="number" id="number" value="2">
+    </div>
+    <div class="form-input">
+      <label for="boxesX">number of boxes vertically</label>
+      <input type="number" formControlName="boxesX" id="boxesX" value="5">
+    </div>
+    <div class="form-input">
+      <label for="boxesY">number of boxes horizontally</label>
+      <input type="number" formControlName="boxesY" id="boxesY" value="5">
+    </div>
+    <button type="submit" [disabled]="blockButton || gameForm.invalid">Generate and invite friends</button>
+  </form>
+</div>
