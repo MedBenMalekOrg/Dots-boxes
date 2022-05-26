@@ -1,12 +1,40 @@
+.logo {
+  margin: 4rem auto;
+}
+
+.box.logo {
+  background-color: white;
+}
+
+.box.logo .circle {
+  width: 180px;
+  height: 180px;
+  background-color: #4b4b4b;
+  border-radius: 50%;
+  position: absolute;
+  top: -40px;
+  left: -40px;
+}
+
+.box.logo .circle:hover {
+  background-color: deeppink;
+}
+
 .box {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
   background-color: #e1e1e1;
 }
 
 .box.active {
   background-color: #788ba4;
+}
+
+.box.logo .dot {
+  width: 26px;
+  height: 26px;
+  background-color: deeppink;
 }
 
 .box .dot {
@@ -16,6 +44,26 @@
   height: 10px;
   background-color: #3c4c62;
   z-index: 2;
+}
+
+.box.logo .dot.tr {
+  top: -6px;
+  right: -6px;
+}
+
+.box.logo .dot.tl {
+  top: -6px;
+  left: -6px;
+}
+
+.box.logo .dot.br {
+  bottom: -6px;
+  right: -6px;
+}
+
+.box.logo .dot.bl {
+  bottom: -6px;
+  left: -6px;
 }
 
 .box .dot.tr {
@@ -36,6 +84,25 @@
 .box .dot.br {
   bottom: -3px;
   right: -3px;
+}
+
+.box.logo .line {
+  background-color: deeppink;
+  transform-origin: 0 50%;
+  z-index: 1;
+  cursor: auto;
+}
+
+.box.logo .line:hover {
+  background-color: deeppink;
+}
+
+.box.logo .line,.box.logo .line.bottom {
+  height: 10px;
+}
+
+.box.logo .line.left,.box.logo .line.right {
+  width: 10px;
 }
 
 .box .line {
