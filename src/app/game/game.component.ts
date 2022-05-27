@@ -1,10 +1,10 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Game} from '../Game.model';
-import {GameService} from '../game.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ApiService} from '../api.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Observable, tap} from 'rxjs';
+import {ModalService} from '../modal.service';
 
 @Component({
   selector: 'app-game',
@@ -18,7 +18,7 @@ export class GameComponent implements OnInit {
   blockButton = false;
   gamePromise: Promise<Game> = new Promise((resolve) => resolve(null));
 
-  constructor(private gameService: GameService,
+  constructor(private modalService: ModalService,
               private route: ActivatedRoute,
               private api: ApiService,
               private router: Router,
@@ -35,19 +35,18 @@ export class GameComponent implements OnInit {
     this.gamePromise = this.api.getGame(id);
     const game = await this.gamePromise;
     if (game === null) {
-      this.gameService.setModal({
+      this.modalService.setModal({
         header: 'Invalid game',
         text: `This game doesn't exist, please try to create new game`
       });
       await this.router.navigate(['']);
       return;
     }
-    this.gameService.setGame(game);
     this.game$ = new Observable<Game>((observer) => observer.next(game));
     const playerName = ApiService.getPlayerLocal();
     if ((playerName === null || !game.players.hasOwnProperty(playerName)) && game.playerNumber === Object.keys(game.players).length) {
-      this.gameService.setModal(null);
-      this.gameService.setModal({header: 'Game is full', text: 'This game is already full of players'});
+      this.modalService.setModal(null);
+      this.modalService.setModal({header: 'Game is full', text: 'This game is already full of players'});
       await this.router.navigate(['']);
       return;
     }
@@ -59,7 +58,7 @@ export class GameComponent implements OnInit {
     this.game$ = this.api.liveGame(id).pipe(tap({
       next: (game) => {
         if (game.gameEnded()) {
-          this.gameService.setModal({
+          this.modalService.setModal({
             header: 'Game finished',
             text: `${game.getWinner() ? game.getWinner().name + ' won!' : 'Draw'}`
           })

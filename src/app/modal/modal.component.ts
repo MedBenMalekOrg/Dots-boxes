@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ModalDirective} from '../modal.directive';
-import {GameService} from '../game.service';
+import {ModalService} from '../modal.service';
 
 @Component({
   selector: 'app-modal',
@@ -10,13 +10,13 @@ import {GameService} from '../game.service';
 export class ModalComponent {
   header: string;
   text: string;
-  constructor(private gameService: GameService) { }
+  constructor(private modalService: ModalService) { }
 
   close() {
     if (ModalDirective.vcRef) {
       ModalDirective.vcRef.clear();
     }
-    this.gameService.setModal(null);
+    this.modalService.setModal(null);
   }
 
 }

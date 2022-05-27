@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {GameService, Modal} from './game.service';
+import {Modal, ModalService} from './modal.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +10,8 @@ export class AppComponent {
   modal: Modal = null;
   isModalOpen = false;
 
-  constructor(gameService: GameService) {
-    gameService.getModal().subscribe(modal => {
+  constructor(modalService: ModalService) {
+    modalService.getModal().subscribe(modal => {
       this.modal = modal;
       if (modal !== null) this.isModalOpen = true;
     })

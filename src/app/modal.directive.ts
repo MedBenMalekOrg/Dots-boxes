@@ -1,16 +1,13 @@
 import {
   Directive,
-  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
   ViewContainerRef
 } from '@angular/core';
 import {ModalComponent} from './modal/modal.component';
-import {GameService} from './game.service';
 
 @Directive({
   selector: '[appModal]'
