@@ -26,7 +26,13 @@ export class Game implements GameInterface {
     this.x = params.x;
     this.y = params.y;
     this.playerNumber = params.playerNumber;
-    this.players = params.players;
+    this.players = Object.keys(params.players).sort().reduce(
+      (players: ObjectPlayer, name: string) => {
+        players[name] = params.players[name];
+        return players;
+      },
+      {}
+    );
     if (params.player) this.player = params.player;
     if (params.creator) this.creator = params.creator;
     if (params.boxes) {
@@ -101,9 +107,18 @@ export class Game implements GameInterface {
     this.player = this.players[newName];
   }
 
-  updateScore(add = 1) {
+  getLastLine(): [string, number][] {
+    let list: [string, number][] = [];
+    for (const box of this.boxes.reverse()) {
+      const position = box.getLastLine();
+      if (position) list.push([position, box.id]);
+    }
+    return list;
+  }
+
+  updateScore() {
     const [, player] = this.getActivePlayer();
-    player.score += add;
+    player.score += 1;
   }
 
   resetLines(): void {
@@ -115,7 +130,7 @@ export class Game implements GameInterface {
   getWinner(): Player {
     const playersNames = Object.keys(this.players);
     let winner = playersNames[0];
-    let draw = true;
+    let draw = this.players[winner].score === this.players[playersNames[1]].score;
     for (let i = 1; i < playersNames.length; i++) {
       if (this.players[playersNames[i]].score > this.players[winner].score) {
         winner = playersNames[i];
@@ -123,6 +138,19 @@ export class Game implements GameInterface {
       }
     }
     return draw ? null : this.players[winner];
+  }
+
+  replay() {
+    this.boxes = [];
+    for (let id = 0; id < (this.x * this.y); id++) this.boxes.push(new Box({id}));
+    const players: ObjectPlayer = {};
+    let index = 0;
+    for (const name of Object.keys(this.players)) {
+      players[name] = {score: 0, turn: name === this.creator, color: this.colors[index], name}
+      if (name === this.creator) this.player = players[name];
+      index++;
+    }
+    this.players = players;
   }
 
   public toJSON(): { [x: string]: any } {
@@ -172,6 +200,12 @@ export class Box implements BoxInterface {
 
   getLine(position: Position): LineValue {
     return this.lines[position] || null;
+  }
+
+  getLastLine(): string {
+    for (let position of ['top', 'left', 'right', 'bottom'])
+      if (this.lines[(position as Position)].last === true) return position;
+    return null;
   }
 
   updateLine(position: Position): void {

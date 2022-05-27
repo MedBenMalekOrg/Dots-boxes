@@ -11,6 +11,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {GameComponent} from './game/game.component';
 import { HomeComponent } from './home/home.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { LogoComponent } from './logo/logo.component';
 
 const routes: Routes = [
   {
@@ -30,7 +31,8 @@ const routes: Routes = [
     ModalComponent,
     ModalDirective,
     GameComponent,
-    HomeComponent
+    HomeComponent,
+    LogoComponent
   ],
   imports: [
     BrowserModule,

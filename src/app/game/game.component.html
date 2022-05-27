@@ -1,12 +1,13 @@
 <ng-container *ngIf="(game$ | async) as game">
   <ng-container *ngIf="isReady && game.playerNumber === keys(game.players).length">
+    <h1 class="title" routerLink="/">Dots & boxes</h1>
     <div class="score-board" >
       <div class="player" *ngFor="let player of keys(game.players)">
-        <h1>{{player}} <span class="turn" [ngStyle]="{ 'backgroundColor': game.players[player].color }" *ngIf="game.players[player].turn"></span></h1>
-        <p>{{game.players[player].score}}</p>
+        <h1>{{player}}</h1>
+        <p [ngStyle]="{ 'backgroundColor': game.players[player].turn ? game.players[player].color : null }">{{game.players[player].score}}</p>
       </div>
     </div>
-    <div class="container">
+    <div class="game-container">
       <div *ngFor="let x of game.getRows(); let indexRow = index">
         <app-box *ngFor="let y of game.getColumns(); let indexColumn = index"
                  [id]="x + (y*game.x)"
@@ -15,12 +16,15 @@
                  [game]="game"></app-box>
       </div>
     </div>
+    <button *ngIf="game.gameEnded()" (click)="replay(game)">Replay</button>
   </ng-container>
-  <div class="form-container" *ngIf="isReady && game && (game.playerNumber > keys(game.players).length)">
+  <div class="form-container flex" *ngIf="isReady && game && (game.playerNumber > keys(game.players).length)">
     <h1>Waiting for players to join</h1>
+    <div class="link" (click)="copyTextToClipboard()">Send link for your friends to join</div>
     <h1 *ngIf="keys(game.players) as players">{{players.length}} {{players.length > 1 ? 'players' : 'player'}} of {{game.playerNumber}} are ready</h1>
   </div>
   <div class="form-container" *ngIf="!isReady && game !== null">
+    <app-logo></app-logo>
     <h1>Join the game</h1>
     <form [formGroup]="gameJoinForm" (ngSubmit)="onJoin(game)">
       <div class="form-input">

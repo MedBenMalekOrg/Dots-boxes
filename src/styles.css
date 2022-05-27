@@ -37,7 +37,7 @@ body {
   font-family: 'Lobster', cursive;
   width: fit-content;
 }
-.form-container form button {
+button {
   display: block;
   background-color: #4b4b4b;
   color: white;
@@ -49,6 +49,6 @@ body {
   margin: 1rem auto;
   border: 1px solid #4b4b4b;
 }
-.form-container form button:hover {
+button:hover {
   background-color: #ff64ab;
 }
