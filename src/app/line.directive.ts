@@ -15,13 +15,13 @@ export class LineDirective {
     if (this.animation === null && !this.active) this.animation = animate(this.element.nativeElement, {backgroundColor: [null, '#4b4b4b']}, {repeat: Infinity});
   }
 
-  @HostListener('mouseleave') onMouseLeave() {
+  @HostListener('mousedown')
+  @HostListener('mouseleave')
+  stopAnimation() {
     if (this.animation !== null) {
       this.animation.cancel();
       this.animation = null;
       this.element.nativeElement.style.backgroundColor = '';
     }
   }
-
-
 }

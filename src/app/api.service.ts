@@ -16,45 +16,6 @@ export class ApiService {
               private router: Router) {
   }
 
-  async createGame(data: GameInterface) {
-    try {
-      const game = new Game(data);
-      const docRef = await addDoc(collection(this.firestore, "games"), game.toJSON());
-      game.id = docRef.id;
-      this.game = game;
-      ApiService.savePlayerLocal(game.creator);
-      await this.router.navigate([docRef.id]);
-    } catch (e) {
-      console.error(e);
-      await this.router.navigate(['']);
-      this.modalService.setModal({
-        header: '¡Ouups!',
-        text: e as string || 'something happened! Please try again latter'
-      });
-    }
-  }
-
-  async addPlayer(data: Game, name: string) {
-    ApiService.savePlayerLocal(name);
-    const game = data.toJSON() as GameInterface;
-    const docRef = doc(this.firestore, "games", data.id);
-    await updateDoc(docRef, {
-      players: {
-        ...game.players,
-        [name as string]: {
-          score: 0,
-          turn: false,
-          color: data.colors[Object.keys(game.players).length],
-          name
-        }
-      }});
-  }
-
-  async updateGame(data: Game) {
-    const docRef = doc(this.firestore, "games", data.id);
-    await updateDoc(docRef, data.toJSON());
-  }
-
   async getGame(id: string): Promise<Game> {
     if (this.game !== null) return this.game;
     const docRef = doc(this.firestore, "games", id);
@@ -74,18 +35,32 @@ export class ApiService {
     }
   }
 
+  async createGame(data: GameInterface) {
+    try {
+      const game = new Game(data);
+      const docRef = await addDoc(collection(this.firestore, "games"), game.toJSON());
+      game.id = docRef.id;
+      this.game = game;
+      ApiService.savePlayerLocal(game.creator);
+      await this.router.navigate([docRef.id]);
+    } catch (e) {
+      console.error(e);
+      await this.router.navigate(['']);
+      this.modalService.setModal({
+        header: '¡Ouups!',
+        text: e as string || 'something happened! Please try again latter'
+      });
+    }
+  }
+
+  async updateGame(data: Game) {
+    const docRef = doc(this.firestore, "games", data.id);
+    await updateDoc(docRef, data.toJSON());
+  }
+
   liveGame(id: string): Observable<Game> {
     const docRef = doc(this.firestore, "games", id);
     return docSnapshots(docRef).pipe(map(docSnap => docSnap.exists() ? new Game({id: docSnap.id, ...docSnap.data() as GameInterface}) : null));
-  }
-
-  static saveGameLocal(game: GameInterface): void {
-    localStorage.setItem('game', JSON.stringify(game));
-  }
-
-  static getGameLocal(): GameInterface {
-    const item = localStorage.getItem('game');
-    return JSON.parse(item) || null;
   }
 
   static savePlayerLocal(name: string): void {

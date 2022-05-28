@@ -12,11 +12,10 @@ import {ModalService} from '../modal.service';
   styleUrls: ['./game.component.css', '../box/box.component.css']
 })
 export class GameComponent implements OnInit {
+  readonly gameJoinForm: FormGroup;
   game$: Observable<Game>;
   isReady = false;
-  gameJoinForm: FormGroup;
   blockButton = false;
-  gamePromise: Promise<Game> = new Promise((resolve) => resolve(null));
 
   constructor(private modalService: ModalService,
               private route: ActivatedRoute,
@@ -26,43 +25,43 @@ export class GameComponent implements OnInit {
               formBuilder: FormBuilder) {
     const playerName = ApiService.getPlayerLocal();
     this.gameJoinForm = formBuilder.group({
-      name: [playerName, Validators.required]
-    })
+      name: [playerName, [Validators.required, Validators.min(3)]]
+    });
   }
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
-    this.gamePromise = this.api.getGame(id);
-    const game = await this.gamePromise;
-    if (game === null) {
-      this.modalService.setModal({
-        header: 'Invalid game',
-        text: `This game doesn't exist, please try to create new game`
-      });
-      await this.router.navigate(['']);
-      return;
-    }
-    this.game$ = new Observable<Game>((observer) => observer.next(game));
-    const playerName = ApiService.getPlayerLocal();
-    if ((playerName === null || !game.players.hasOwnProperty(playerName)) && game.playerNumber === Object.keys(game.players).length) {
-      this.modalService.setModal(null);
-      this.modalService.setModal({header: 'Game is full', text: 'This game is already full of players'});
-      await this.router.navigate(['']);
-      return;
-    }
-    if (playerName !== null && game.players.hasOwnProperty(playerName)) this.liveGame(id);
-  }
-
-  liveGame(id: string) {
-    this.isReady = true;
     this.game$ = this.api.liveGame(id).pipe(tap({
-      next: (game) => {
+      next: async (game) => {
+        if (game === null) {
+          this.modalService.setModal({
+            header: 'Invalid game',
+            text: `This game doesn't exist, please try to create new game`
+          });
+          await this.router.navigate(['']);
+          return;
+        }
+        const playerName = ApiService.getPlayerLocal();
+        if ((playerName === null || !game.players.hasOwnProperty(playerName)) && game.playerNumber === Object.keys(game.players).length) {
+          this.modalService.setModal(null);
+          this.modalService.setModal({header: 'Game is full', text: 'This game is already full of players'});
+          await this.router.navigate(['']);
+          return;
+        }
+        if (!this.isReady && playerName !== null && game.players.hasOwnProperty(playerName)) this.isReady = true;
         if (game.gameEnded()) {
           this.modalService.setModal({
             header: 'Game finished',
-            text: `${game.getWinner() ? game.getWinner().name + ' won!' : 'Draw'}`
-          })
+            text: game.getWinnerText()
+          });
         }
+      },
+      error: (e) => {
+        console.error(e);
+        this.modalService.setModal({
+          header: 'Ouups, Something happened!',
+          text: 'Try again later please!'
+        });
       }
     }));
   }
@@ -71,21 +70,44 @@ export class GameComponent implements OnInit {
     return Object.keys(object);
   }
 
-  async onJoin(game: Game) {
-    await this.api.addPlayer(game, this.gameJoinForm.value.name);
-    this.liveGame(game.id);
+  async onJoin(game: Game): Promise<void> {
+    this.blockButton = true;
+    try {
+      game.addPlayer(this.gameJoinForm.value.name);
+      await this.api.updateGame(game);
+      this.blockButton = false;
+    } catch (e) {
+      console.error(e);
+      this.modalService.setModal({
+        header: 'Ouups, Something happened!',
+        text: 'Try again later please!'
+      });
+      this.blockButton = false;
+    }
+
   }
 
-  copyTextToClipboard() {
+  copyTextToClipboard(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    navigator.clipboard.writeText(`${window.location.hostname}:${window.location.port}/${id}`).then(
+    navigator.clipboard.writeText(`https://${window.location.hostname}:${window.location.port}/${id}`).then(
       () => alert('Linked copied'),
       () => alert('Share this page link to your friends for them to join')
     );
   }
 
-  replay(game: Game): Promise<void> {
-    game.replay();
-    return this.api.updateGame(game);
+  async replay(game: Game): Promise<void> {
+    this.blockButton = true;
+    try {
+      game.replay();
+      await this.api.updateGame(game);
+      this.blockButton = false;
+    } catch (e) {
+      console.error(e);
+      this.modalService.setModal({
+        header: 'Ouups, Something happened!',
+        text: 'Try again later please!'
+      });
+      this.blockButton = false;
+    }
   }
 }

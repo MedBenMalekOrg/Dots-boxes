@@ -16,7 +16,7 @@
                  [game]="game"></app-box>
       </div>
     </div>
-    <button *ngIf="game.gameEnded()" (click)="replay(game)">Replay</button>
+    <button *ngIf="game.gameEnded()" (click)="replay(game)" [disabled]="blockButton">Replay</button>
   </ng-container>
   <div class="form-container flex" *ngIf="isReady && game && (game.playerNumber > keys(game.players).length)">
     <h1>Waiting for players to join</h1>

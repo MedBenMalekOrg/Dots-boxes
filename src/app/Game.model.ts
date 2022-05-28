@@ -4,10 +4,9 @@ export interface GameInterface {
   y: number;
   playerNumber: number;
   players: ObjectPlayer;
-  player?: Player;
-  creator?: string;
+  player: Player;
+  creator: string;
   boxes?: BoxInterface[];
-  colors?: string[];
 }
 
 export class Game implements GameInterface {
@@ -33,8 +32,8 @@ export class Game implements GameInterface {
       },
       {}
     );
-    if (params.player) this.player = params.player;
-    if (params.creator) this.creator = params.creator;
+    this.player = params.player;
+    this.creator = params.creator;
     if (params.boxes) {
       this.boxes = params.boxes.map(box => new Box(box));
     }
@@ -53,25 +52,18 @@ export class Game implements GameInterface {
     return Array(this.x).fill(0).map((x,i) => i);
   }
 
-  /**
-   * return true if the player name is available
-   * @param playerName
-   */
-  verifyPlayerName(playerName: string): boolean {
+  private verifyPlayerName(playerName: string): boolean {
     return !this.players.hasOwnProperty(playerName);
   }
 
   addPlayer(playerName: string) {
     if (this.verifyPlayerName(playerName)){
-      const index = Object.keys(this.players).indexOf(playerName);
       const turn = Object.keys(this.players).length === 0;
-      this.players[playerName] = {score: 0, turn, color: this.colors[index], name: playerName}
-      if (index === 0) {
-        this.player = this.players[playerName];
-      }
+      this.players[playerName] = {score: 0, turn, color: this.colors[Object.keys(this.players).length], name: playerName}
+      if (Object.keys(this.players).length === 0) this.player = this.players[playerName];
     } else {
       console.error('Player exist');
-      alert(`${playerName} username exists`)
+      alert(`${playerName} username exists, chose another one`);
     }
   }
 
@@ -79,28 +71,14 @@ export class Game implements GameInterface {
     return this.boxes.find(b => b.id === id) || null;
   }
 
-  /**
-   * return true if all boxes are filled
-   */
   gameEnded(): boolean {
     return this.boxes.filter(box => box.active).length === this.x * this.y;
   }
 
-  getActivePlayer(): [string, Player] {
-    const playersNames = Object.keys(this.players);
-    for (let name of playersNames) {
-      if (this.players[name].turn) {
-        return [name, this.players[name]];
-      }
-    }
-    return null;
-  }
-
   changeTurns(): void {
-    const [name, player] = this.getActivePlayer();
-    player.turn = false;
+    this.players[this.player.name].turn = false;
     const playersNames = Object.keys(this.players);
-    const index = playersNames.indexOf(name);
+    const index = playersNames.indexOf(this.player.name);
     const nextIndex = index+1 >= playersNames.length ? 0 : index+1
     const newName = playersNames[nextIndex];
     this.players[newName].turn = true;
@@ -117,8 +95,7 @@ export class Game implements GameInterface {
   }
 
   updateScore() {
-    const [, player] = this.getActivePlayer();
-    player.score += 1;
+    this.players[this.player.name].score += 1;
   }
 
   resetLines(): void {
@@ -127,17 +104,17 @@ export class Game implements GameInterface {
         if (line.last) line.last = false;
   }
 
-  getWinner(): Player {
-    const playersNames = Object.keys(this.players);
-    let winner = playersNames[0];
-    let draw = this.players[winner].score === this.players[playersNames[1]].score;
-    for (let i = 1; i < playersNames.length; i++) {
-      if (this.players[playersNames[i]].score > this.players[winner].score) {
-        winner = playersNames[i];
-        draw = false;
-      }
+  getWinnerText(): string {
+    const players: Player[] = Object.values(this.players);
+    const winnerScore = Math.max(...players.map(p => p.score));
+    const winners = players.filter(p => p.score === winnerScore);
+    if (winners.length === 1) {
+      return `The winner is ${winners[0].name}`;
+    } else if (winners.length === players.length) {
+      return 'It\'s a draw!';
+    } else {
+      return `The players ${winners.map(p => p.name).join(' and ')} won the game!`
     }
-    return draw ? null : this.players[winner];
   }
 
   replay() {
@@ -157,7 +134,6 @@ export class Game implements GameInterface {
     const json = {...this as GameInterface};
     json.boxes = this.boxes.map(b => b.toJSON());
     delete json.id;
-    delete json.colors;
     return json;
   }
 }
