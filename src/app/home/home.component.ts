@@ -6,7 +6,6 @@ import {GameInterface} from '../Game.model';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['../box/box.component.css']
 })
 export class HomeComponent {
   gameForm: FormGroup;

@@ -12,6 +12,7 @@ import {GameComponent} from './game/game.component';
 import { HomeComponent } from './home/home.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { LogoComponent } from './logo/logo.component';
+import { LineDirective } from './line.directive';
 
 const routes: Routes = [
   {
@@ -32,7 +33,8 @@ const routes: Routes = [
     ModalDirective,
     GameComponent,
     HomeComponent,
-    LogoComponent
+    LogoComponent,
+    LineDirective
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,6 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     FormsModule,
     ReactiveFormsModule
-
   ],
   providers: [],
   bootstrap: [AppComponent]

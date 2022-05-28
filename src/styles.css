@@ -12,23 +12,26 @@ body {
   color: #4b4b4b;
   margin: 0.5rem 0 0 0;
 }
+
 .form-container form {
   display: block;
   width: 400px;
   margin: 0 auto;
 }
+
 .form-container form .form-input {
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
   margin: 1rem;
-
 }
+
 .form-container form .form-input label {
   display: block;
   color: #4b4b4b;
 }
+
 .form-container form .form-input input {
   font-size: 24px;
   padding: 0.5rem 1rem;
@@ -37,6 +40,7 @@ body {
   font-family: 'Lobster', cursive;
   width: fit-content;
 }
+
 button {
   display: block;
   background-color: #4b4b4b;
@@ -49,6 +53,7 @@ button {
   margin: 1rem auto;
   border: 1px solid #4b4b4b;
 }
+
 button:hover {
   background-color: #ff64ab;
 }

@@ -1,24 +1,28 @@
 <div class="box" [id]="'box-'+id" [class.active]="game.getBox(id).active" [ngStyle]="{ 'backgroundColor': game.getBox(id).color}">
   <span class="line top"
-        #lineTop
+        appLine
+        [active]="line.active"
         (click)="handleLine('top')"
         *ngIf="game.getBox(id).getLine('top') as line"
         [class.active]="line.active"
         [class.last]="line.last"></span>
   <span class="line left"
-        #lineLeft
+        appLine
+        [active]="line.active"
         (click)="handleLine('left')"
         *ngIf="game.getBox(id).getLine('left') as line"
         [class.active]="line.active"
         [class.last]="line.last"></span>
   <span class="line bottom"
-        #lineBottom
+        appLine
+        [active]="line.active"
         (click)="handleLine('bottom')"
         *ngIf="lastBottom && game.getBox(id).getLine('bottom') as line"
         [class.active]="line.active"
         [class.last]="line.last"></span>
   <span class="line right"
-        #lineRight
+        appLine
+        [active]="line.active"
         (click)="handleLine('right')"
         *ngIf="lastRight && game.getBox(id).getLine('right') as line"
         [class.active]="line.active"
