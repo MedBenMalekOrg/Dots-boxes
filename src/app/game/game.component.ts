@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Game} from '../Game.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ApiService} from '../api.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Observable, tap} from 'rxjs';
 import {ModalService} from '../modal.service';
 
@@ -12,7 +12,7 @@ import {ModalService} from '../modal.service';
   styleUrls: ['./game.component.css', '../box/box.component.css']
 })
 export class GameComponent implements OnInit {
-  readonly gameJoinForm: FormGroup;
+  readonly gameJoinForm: UntypedFormGroup;
   game$: Observable<Game>;
   isReady = false;
   blockButton = false;
@@ -22,7 +22,7 @@ export class GameComponent implements OnInit {
               private api: ApiService,
               private router: Router,
               private cdRef: ChangeDetectorRef,
-              formBuilder: FormBuilder) {
+              formBuilder: UntypedFormBuilder) {
     const playerName = ApiService.getPlayerLocal();
     this.gameJoinForm = formBuilder.group({
       name: [playerName, [Validators.required, Validators.min(3)]]

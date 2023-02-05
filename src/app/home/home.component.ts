@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ApiService} from '../api.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {GameInterface} from '../Game.model';
 
 @Component({
@@ -8,10 +8,10 @@ import {GameInterface} from '../Game.model';
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  gameForm: FormGroup;
+  gameForm: UntypedFormGroup;
   blockButton = false;
 
-  constructor(private api: ApiService, private formBuilder: FormBuilder) {
+  constructor(private api: ApiService, private formBuilder: UntypedFormBuilder) {
     this.gameForm = this.formBuilder.group({
       name: [ApiService.getPlayerLocal(), Validators.required],
       number: [2, [Validators.required, Validators.max(6), Validators.min(2)]],
